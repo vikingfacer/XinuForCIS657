@@ -1,23 +1,21 @@
 /*  main.c  - main */
 
 #include <xinu.h>
-#include <stdio.h>
+
+void putcForever(char c);
 
 int main(int argc, char **argv)
 {
-	uint32 retval;
-
-	resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
-
-	/* Wait for shell to exit and recreate it */
-
-	recvclr();
-	while (TRUE) {
-		retval = receive();
-		kprintf("\n\n\rMain process recreating shell\n\n\r");
-		resume(create(shell, 4096, 1, "shell", 1, CONSOLE));
-	}
-	while (1);
+	resume(create(putcForever, 1024, 20, "Proc A", 1, 'A'));
+	resume(create(putcForever, 1024, 20, "Proc B", 1, 'B'));
 
 	return OK;
+}
+
+void putcForever(char c)
+{
+	while(1)
+	{
+	putc(CONSOLE, c);
+	}
 }
