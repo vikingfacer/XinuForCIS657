@@ -6,7 +6,7 @@ void putcForever(char c);
 
 int main(int argc, char **argv)
 {
-	resume(create(putcForever, 1024, 20, "Proc A", 1, 'A'));
+	resume(create(putcForever, 1024, 40, "Proc A", 1, 'A'));
 	resume(create(putcForever, 1024, 20, "Proc B", 1, 'B'));
 
 	return OK;
