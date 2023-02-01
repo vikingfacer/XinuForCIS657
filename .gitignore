@@ -1,0 +1,10 @@
+*.o
+compile/vn
+compile/xinu
+config/config
+config/lex.yy.c
+config/y.tab.c
+include/conf.h
+lib/libxc/libxc.a
+system/conf.c
+
