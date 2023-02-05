@@ -8,3 +8,6 @@ include/conf.h
 lib/libxc/libxc.a
 system/conf.c
 
+compile/version
+config/Configuration
+config/conf.h
