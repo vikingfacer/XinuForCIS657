@@ -9,47 +9,65 @@
  * and have the consumer extract values and print them on the console.
  * How many semaphores are needed?
  */
+
 #include <xinu.h>
-void prod2(sid32, sid32);
-void cons2(sid32, sid32);
-int32 n = 0; /* Variable n has inital value zero */
+void prod2(), cons2();
+int32 n = 0, bufSize = 15; /* Variable n has inital value zero */
+char buffer[15];
+sid32 sem;
+pid32 ppid, cpid;
+
+
 /*-------------------------------------------------------------------
 * main - Producer and Consumer processes synchronized with semaphores
 *--------------------------------------------------------------------
 */
 void main(void)
 {
-	sid32 produced, consumed;
-	consumed = semcreate(0);
-	produced = semcreate(1);
-	resume( create(cons2, 1024, 20, "cons", 2, consumed, produced) );
-	resume( create(prod2, 1024, 20, "prod", 2, consumed, produced) );
+	sem = semcreate(bufSize-1);
+	cpid = create(cons2, 1024, 20, "cons", 0);
+	ppid = create(prod2, 1024, 30, "prod", 0);
+	resume(ppid);
+	resume(cpid);
+
 }
 /*-------------------------------------------------------------------------
 * prod2 - Increment n 2000 times, waiting for it to be consumed
 *---------------------------------------------------------------------------
 */
-void prod2(sid32 consumed, sid32 produced)
+//void prod2(sid32 consumed, sid32 produced)
+void prod2() // no args since consumed and produced are global
 {
 	int32 i;
-	for(i=1; i<=2000; i++)
+
+	for (i = 0; i < bufSize*3; i++)
 	{
-		wait(consumed);
-		n++;
-		signal(produced);
+		if(i%15 == 0) kprintf("\n\nProducer working:\n");
+		buffer[i%15] = i+1;
+		printf("%d ", buffer[i%15]);
+		wait(sem);
 	}
+
 }
 /*-------------------------------------------------------------------------
 * cons2 - Print n 2000 times, waiting for it to be produced
 *---------------------------------------------------------------------------
 */
-void cons2(sid32 consumed, sid32 produced)
+//void cons2(sid32 consumed, sid32 produced)
+void cons2() // no args since consumed and produced are global
 {
-	int32 i;
-	for(i=1; i<=2000; i++)
+	
+	int32 i, loops = 0;
+	while (loops < 3)
 	{
-		wait(produced);
-		printf("n is %d \n", n);
-		signal(consumed);
+		kprintf("\nConsumer working loop #%d:\n", loops+1);
+		for (i = 0; i < bufSize; i++)
+		{
+			printf("[%d]:%d ", i, buffer[i]);
+		}
+		loops++;
+		signaln(sem, bufSize);
+
 	}
+
 }
