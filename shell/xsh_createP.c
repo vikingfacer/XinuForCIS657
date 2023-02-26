@@ -12,7 +12,13 @@
 * xsh_create - shell command to createeeeee
 *------------------------------------------------------------------------
 */
-void runforever(void) {while(TRUE){}};
+void runforever(void) {
+	while(TRUE){
+		printf("hello from PID: %d\n", getpid());
+		sleep(5);
+	}
+};
+
 shellcmd xsh_create(int nargs, char *args[])
 {
 	if (nargs == 1){
