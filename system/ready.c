@@ -23,8 +23,11 @@ status	ready(
 
 	prptr = &proctab[pid];
 	prptr->prstate = PR_READY;
+	if (PRIO_SCHED){
 	insert(pid, readylist, prptr->prprio);
-
+	} else {
+		enqueue(pid, readylist);
+	}
 	if (resch == RESCHED_YES) {
 		resched();
 	}

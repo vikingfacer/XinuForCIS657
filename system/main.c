@@ -3,6 +3,8 @@
 #include <xinu.h>
 #include <stdio.h>
 
+bool8 PRIO_SCHED = 0;
+
 int main(int argc, char **argv)
 {
 	uint32 retval;
