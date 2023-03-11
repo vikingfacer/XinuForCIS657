@@ -2,7 +2,7 @@
 
 #include <xinu.h>
 #include <stdio.h>
-#include "shprototypes.h"		  
+#include "shprototypes.h"
 
 /************************************************************************/
 /* Xinu shell commands and the function associated with each		*/
@@ -22,7 +22,9 @@ const	struct	cmdent	cmdtab[] = {
 	{"sleep",	FALSE,	xsh_sleep},
 	{"?",		FALSE,	xsh_help},
 	{"pqtab",   FALSE,  xsh_pqtab},
-	{"create",   FALSE,  xsh_create}
+	{"create",  FALSE,  xsh_create},
+	{"recv",    FALSE,  xsh_receive},
+	{"send", 	FALSE,  xsh_send}
 };
 
 uint32	ncmd = sizeof(cmdtab) / sizeof(struct cmdent);

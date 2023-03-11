@@ -73,3 +73,7 @@ extern	shellcmd  xsh_help	(int32, char *[]);
 extern shellcmd xsh_pqtab 	(int32, char *[]);
 
 extern shellcmd xsh_create  (int32, char *[]);
+
+extern shellcmd xsh_receive (int32 , char *[]);
+
+extern shellcmd xsh_send (int32 , char *[]);
