@@ -14,12 +14,11 @@ umsg32	receive(void)
 
 	mask = disable();
 	prptr = &proctab[currpid];
-	if (prptr->prhasmsg == FALSE) {
+	if (prptr->prhasmsg == 0) {
 		prptr->prstate = PR_RECV;
 		resched();		/* block until message arrives	*/
 	}
-	msg = prptr->prmsg;		/* retrieve message		*/
-	prptr->prhasmsg = FALSE;	/* reset message flag		*/
+	msg = prptr->prmsg[prptr->prhasmsg--];		/* retrieve message		*/
 	restore(mask);
 	return msg;
 }

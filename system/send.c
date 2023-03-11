@@ -21,12 +21,12 @@ syscall	send(
 	}
 
 	prptr = &proctab[pid];
-	if ((prptr->prstate == PR_FREE) || prptr->prhasmsg) {
+	if ((prptr->prstate == PR_FREE) || (prptr->prhasmsg >= KMSG)) {
 		restore(mask);
 		return SYSERR;
 	}
-	prptr->prmsg = msg;		/* deliver message		*/
-	prptr->prhasmsg = TRUE;		/* indicate message is waiting	*/
+
+	prptr->prmsg[++prptr->prhasmsg] = msg; /* deliver message		*/
 
 	/* If recipient waiting or in timed-wait make it ready */
 
