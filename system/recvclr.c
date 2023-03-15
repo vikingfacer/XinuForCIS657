@@ -14,12 +14,15 @@ umsg32	recvclr(void)
 
 	mask = disable();
 	prptr = &proctab[currpid];
-	if (prptr->prhasmsg == TRUE) {
-		msg = prptr->prmsg;	/* retrieve message		*/
-		prptr->prhasmsg = FALSE;/* reset message flag		*/
-	} else {
+	if (prptr->prmsgout == prptr->prmsgin) {
 		msg = OK;
+	} else {
+		msg = prptr->prmsg[prptr->prmsgout];	/* retrieve message		*/
 	}
+	prptr->prmsgout = 0;
+	prptr->prmsgin = 0;
+	prptr->prhasmsg = FALSE;/* reset message flag		*/
+
 	restore(mask);
 	return msg;
 }

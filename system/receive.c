@@ -14,12 +14,19 @@ umsg32	receive(void)
 
 	mask = disable();
 	prptr = &proctab[currpid];
-	if (prptr->prhasmsg == FALSE) {
+	kprintf("recv in:%d out:%d\n", prptr->prmsgin, prptr->prmsgout);
+	if (prptr->prmsgin == prptr->prmsgout) {
+		prptr->prmsgin = 0;
+		prptr->prmsgout = 0;
 		prptr->prstate = PR_RECV;
+		prptr->prhasmsg = FALSE;
 		resched();		/* block until message arrives	*/
+	} else {
+		msg = prptr->prmsg[prptr->prmsgout];		/* retrieve message		*/
+		prptr->prmsgout = ++prptr->prmsgout;
+		prptr->prhasmsg = TRUE;
 	}
-	msg = prptr->prmsg;		/* retrieve message		*/
-	prptr->prhasmsg = FALSE;	/* reset message flag		*/
+
 	restore(mask);
 	return msg;
 }

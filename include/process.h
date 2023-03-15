@@ -43,19 +43,22 @@
 
 #define NDESC		5	/* must be odd to make procent 4N bytes	*/
 
+#define KMSG  		5   /* Max of 5 Messages in the MailBox */
 /* Definition of the process table (multiple of 32 bits) */
 
-struct procent {		/* entry in the process table		*/
-	uint16	prstate;	/* process state: PR_CURR, etc.		*/
-	pri16	prprio;		/* process priority			*/
-	char	*prstkptr;	/* saved stack pointer			*/
-	char	*prstkbase;	/* base of run time stack		*/
-	uint32	prstklen;	/* stack length in bytes		*/
-	char	prname[PNMLEN];	/* process name				*/
-	uint32	prsem;		/* semaphore on which process waits	*/
-	pid32	prparent;	/* id of the creating process		*/
-	umsg32	prmsg;		/* message sent to this process		*/
-	bool8	prhasmsg;	/* nonzero iff msg is valid		*/
+struct procent {			/* entry in the process table		*/
+	uint16	prstate;		/* process state: PR_CURR, etc.		*/
+	pri16	prprio;			/* process priority					*/
+	char	*prstkptr;		/* saved stack pointer				*/
+	char	*prstkbase;		/* base of run time stack			*/
+	uint32	prstklen;		/* stack length in bytes			*/
+	char	prname[PNMLEN];	/* process name						*/
+	uint32	prsem;			/* semaphore on which process waits	*/
+	pid32	prparent;		/* id of the creating process		*/
+	umsg32	prmsg[KMSG];	/* message sent to this process		*/
+	uint32  prmsgin;
+	uint32  prmsgout;
+	uint8 	prhasmsg;		/* nonzero iff msg is valid			*/
 	int16	prdesc[NDESC];	/* device descriptors for process	*/
 };
 

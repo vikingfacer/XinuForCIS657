@@ -21,12 +21,15 @@ syscall	send(
 	}
 
 	prptr = &proctab[pid];
-	if ((prptr->prstate == PR_FREE) || prptr->prhasmsg) {
+	kprintf("send in:%d out:%d\n", prptr->prmsgin, prptr->prmsgout);
+	if ((prptr->prstate == PR_FREE) || (prptr->prmsgin >= KMSG)) {
 		restore(mask);
 		return SYSERR;
 	}
-	prptr->prmsg = msg;		/* deliver message		*/
-	prptr->prhasmsg = TRUE;		/* indicate message is waiting	*/
+
+	prptr->prmsg[prptr->prmsgin] = msg; /* deliver message		*/
+	prptr->prmsgin = ++prptr->prmsgin;
+	prptr->prhasmsg = TRUE;
 
 	/* If recipient waiting or in timed-wait make it ready */
 
