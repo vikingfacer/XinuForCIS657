@@ -13,33 +13,28 @@
 */
 void runreceiveforever(void) {
 	while(TRUE){
-		sleep(10);
 		int retval = receive();
+		if (retval != TIMEOUT){
 		printf("Received: %d\n", retval);
+		}
 	}
 };
 
 shellcmd xsh_receive(int32 nargs, char *args[])
 {
-	pri16 priority;
-	char ch;
-	char *chprio;
-	pid32 pid;
-	if (nargs == 1) {
-		priority=INITPRIO;
-	}
-	else if (nargs > 2) {
-		priority = atoi(args[1]);
-		if (priority < (pri16)MINKEY) {
-			kprintf("%s: invalid prioirty\n", args[1]);
-			return 1;
+	if (nargs >= 2) {
+		uint32 i = 0;
+		while(i++ < nargs){
+			pri16 priority = atoi(args[1]);
+			if (priority < (pri16)MINKEY) {
+				kprintf("%s: invalid prioirty\n", args[1]);
+			} else {
+			resume(create(runreceiveforever, 1024, priority, "test", 0));
+			}
 		}
 	}
 	else {
-		kprintf("Too many arguments\n");
-		return 1;
+			resume(create(runreceiveforever, 1024, INITPRIO, "test", 0));
 	}
-	pid = create(runreceiveforever, 1024, priority, "test", 0);
-	resume(pid);
 	return 0;
 }
