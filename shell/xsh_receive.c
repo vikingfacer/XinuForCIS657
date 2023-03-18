@@ -13,6 +13,8 @@
 */
 void runreceiveforever(void) {
 	while(TRUE){
+		// uncomment line below to test recvtime
+		// recvtime(10000);
 		int retval = receive();
 		if (retval != TIMEOUT){
 		printf("Received: %d\n", retval);
